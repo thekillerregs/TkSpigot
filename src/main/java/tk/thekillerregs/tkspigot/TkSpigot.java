@@ -1,9 +1,8 @@
 package tk.thekillerregs.tkspigot;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -28,12 +27,11 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e)
     {
-        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
-        LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
-        helmetMeta.setColor(Color.AQUA);
-        helmet.setItemMeta(helmetMeta);
-        e.getPlayer().getInventory().addItem(helmet);
+        e.getPlayer().sendTitle(ChatColor.GREEN + "Welcome!", ChatColor.AQUA + ":)",
+                                20, 60, 20);
+        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cEtoooo"));
 
+        e.getPlayer().setPlayerListHeaderFooter("§bHey!", "§cHi\n§bHey");
 
     }
 
