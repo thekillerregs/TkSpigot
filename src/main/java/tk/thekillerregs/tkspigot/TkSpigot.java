@@ -28,6 +28,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+
     Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -39,7 +40,9 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 3));
+        e.getPlayer().getWorld().setThundering(true);
+        e.getPlayer().getWorld().setThunderDuration(100);
+
     }
 
 
