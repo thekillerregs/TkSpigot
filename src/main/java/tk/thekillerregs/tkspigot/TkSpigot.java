@@ -3,6 +3,9 @@ package tk.thekillerregs.tkspigot;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -12,11 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class TkSpigot extends JavaPlugin implements Listener {
+public final class TkSpigot extends JavaPlugin {
+
+    private BossBar bossBar;
 
     @Override
     public void onEnable() {
-    Bukkit.getPluginManager().registerEvents(this, this);
+    bossBar = Bukkit.createBossBar("§bthekillerregs", BarColor.WHITE, BarStyle.SEGMENTED_6);
+    Bukkit.getWorld("worlds").getPlayers().forEach(p -> {bossBar.addPlayer(p);});
+
     }
 
     @Override
@@ -24,15 +31,6 @@ public final class TkSpigot extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e)
-    {
-        e.getPlayer().sendTitle(ChatColor.GREEN + "Welcome!", ChatColor.AQUA + ":)",
-                                20, 60, 20);
-        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cEtoooo"));
 
-        e.getPlayer().setPlayerListHeaderFooter("§bHey!", "§cHi\n§bHey");
-
-    }
 
 }
