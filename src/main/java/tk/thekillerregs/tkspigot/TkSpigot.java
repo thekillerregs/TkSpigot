@@ -3,25 +3,29 @@ package tk.thekillerregs.tkspigot;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.block.data.type.Fire;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.FireworkEffect.Type;
+import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-    private BossBar bossBar;
+
 
     @Override
     public void onEnable() {
-    bossBar = Bukkit.createBossBar("§bthekillerregs", BarColor.WHITE, BarStyle.SEGMENTED_6);
     Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -31,9 +35,14 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     }
     
     @EventHandler
-    public void onJoin(PlayerJoinEvent e)
+    public void onSneak(PlayerToggleSneakEvent e)
     {
-        bossBar.addPlayer(e.getPlayer());
+        Firework firework = e.getPlayer().getWorld().spawn(e.getPlayer().getLocation(), Firework.class);
+        FireworkMeta fwm = firework.getFireworkMeta();
+        fwm.addEffect(FireworkEffect.builder().withColor(Color.AQUA).withColor(Color.WHITE).with(Type.STAR).withFlicker().build());
+        fwm.setPower(3);
+        firework.setFireworkMeta(fwm);
+
     }
 
 
