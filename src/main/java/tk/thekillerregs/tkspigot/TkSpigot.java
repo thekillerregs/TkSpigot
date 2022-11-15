@@ -15,20 +15,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class TkSpigot extends JavaPlugin {
+public final class TkSpigot extends JavaPlugin implements Listener {
 
     private BossBar bossBar;
 
     @Override
     public void onEnable() {
     bossBar = Bukkit.createBossBar("§bthekillerregs", BarColor.WHITE, BarStyle.SEGMENTED_6);
-    Bukkit.getWorld("worlds").getPlayers().forEach(p -> {bossBar.addPlayer(p);});
-
+    Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+    
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e)
+    {
+        bossBar.addPlayer(e.getPlayer());
     }
 
 
