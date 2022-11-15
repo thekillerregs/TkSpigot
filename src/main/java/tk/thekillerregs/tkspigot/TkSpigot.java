@@ -13,6 +13,7 @@ import org.bukkit.FireworkEffect.Type;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,9 +23,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-
+    private Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
     @Override
     public void onEnable() {
@@ -36,15 +40,25 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
     }
-    
-    @EventHandler
-    public void onSneak(PlayerToggleSneakEvent e)
-    {
-        e.getPlayer().getWorld().setThundering(true);
-        e.getPlayer().getWorld().setThunderDuration(100);
 
+
+    @EventHandler
+    public void onSneak(AsyncPlayerChatEvent e)
+    {
+        e.getPlayer().sendMessage(ChatColor.valueOf("#27FBDA") + "Olá");
+        e.setMessage(translate(e.getMessage()));
     }
 
+    private String translate (String string)
+    {
+        Matcher matcher = pattern.matcher(string);
+        while(matcher.find()) {
+            String color = string.substring(matcher.start(), matcher.end());
+            string = string.replace(color, ChatColor.valueOf(color) + "");
+            matcher = pattern.matcher(string);
+        }
+        return string;
+    }
 
 
 }
