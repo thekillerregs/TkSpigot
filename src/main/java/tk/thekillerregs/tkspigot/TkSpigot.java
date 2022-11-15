@@ -19,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
@@ -37,12 +39,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-        Firework firework = e.getPlayer().getWorld().spawn(e.getPlayer().getLocation(), Firework.class);
-        FireworkMeta fwm = firework.getFireworkMeta();
-        fwm.addEffect(FireworkEffect.builder().withColor(Color.AQUA).withColor(Color.WHITE).with(Type.STAR).withFlicker().build());
-        fwm.setPower(3);
-        firework.setFireworkMeta(fwm);
-
+        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 3));
     }
 
 
