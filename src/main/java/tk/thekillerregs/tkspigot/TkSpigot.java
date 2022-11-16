@@ -18,6 +18,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +46,14 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-      e.getPlayer().spawnParticle(Particle.SPELL, e.getPlayer().getLocation().add(0,1,0), 5);
+      ItemStack book = new ItemStack(Material.BOOK);
+      BookMeta bookMeta = (BookMeta) book.getItemMeta();
+        bookMeta.setTitle("§bTK");
+        bookMeta.setAuthor("§dTk");
+        bookMeta.addPage("§aOlá!!");
+        book.setItemMeta(bookMeta);
+        e.getPlayer().getInventory().addItem(book);
+
     }
 
 
