@@ -2,3 +2,5 @@ name: TkSpigot
 version: '${project.version}'
 main: tk.thekillerregs.tkspigot.TkSpigot
 authors: [ thekillerregs ]
+commands:
+  punish:

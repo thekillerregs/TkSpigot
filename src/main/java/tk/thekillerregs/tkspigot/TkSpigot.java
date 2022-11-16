@@ -9,6 +9,9 @@ import org.bukkit.block.data.type.Fire;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.FireworkEffect.Type;
@@ -35,7 +38,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
+    getCommand("punish").setExecutor(new PunishCommand());
     Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -45,20 +48,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     }
 
 
-    @EventHandler
-    public void onSneak(PlayerToggleSneakEvent e)
-    {
-      ItemStack banner = new ItemStack(Material.WHITE_BANNER);
-        BannerMeta meta = (BannerMeta) banner.getItemMeta();
-        //One can use arraylists of patterns in order to customize it better
-        meta.addPattern(new Pattern(DyeColor.CYAN, PatternType.CREEPER));
-        banner.setItemMeta(meta);
-        e.getPlayer().getInventory().addItem(banner);
-
-    }
-
-
-    }
+}
 
 
 
