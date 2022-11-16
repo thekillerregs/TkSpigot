@@ -12,11 +12,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -49,14 +46,18 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event)
+    public void onSneak(PlayerToggleSneakEvent e)
     {
-        event.getPlayer().setResourcePack("http://filebin.net/6hp5bmc14efnm3ku/Item_Frames.zip");
-    }
+    if(e.isSneaking())
+    {
+        Entity bat = e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.BAT);
+        Entity bat2 = e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.BAT);
+        bat.addPassenger(e.getPlayer());
+        e.getPlayer().addPassenger(bat2);
 
-    @EventHandler
-    public void onResourceStatus(PlayerResourcePackStatusEvent event)
-    {
+
+
+    }
 
 
 
