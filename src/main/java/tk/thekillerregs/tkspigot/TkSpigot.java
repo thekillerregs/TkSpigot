@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -44,10 +45,9 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-        if(e.isSneaking())
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1.0F, 0.9F);
-        else e.getPlayer().playEffect(e.getPlayer().getLocation(), Effect.RECORD_PLAY, Material.MUSIC_DISC_CAT);
-        
+      e.getPlayer().launchProjectile(Snowball.class, e.getPlayer().getLocation().getDirection());
+      
+
 
     }
 
