@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
@@ -47,7 +48,19 @@ public final class TkSpigot extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event)
+    {
+        event.getPlayer().setResourcePack("http://filebin.net/6hp5bmc14efnm3ku/Item_Frames.zip");
+    }
 
+    @EventHandler
+    public void onResourceStatus(PlayerResourcePackStatusEvent event)
+    {
+
+
+
+    }
 }
 
 
