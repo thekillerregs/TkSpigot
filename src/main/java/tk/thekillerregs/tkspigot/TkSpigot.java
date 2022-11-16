@@ -44,7 +44,10 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0F, 1.0F);
+        if(e.isSneaking())
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1.0F, 0.9F);
+        else e.getPlayer().playEffect(e.getPlayer().getLocation(), Effect.RECORD_PLAY, Material.MUSIC_DISC_CAT);
+        
 
     }
 
