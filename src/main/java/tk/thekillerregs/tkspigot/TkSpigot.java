@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-    private Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
     @Override
     public void onEnable() {
@@ -43,22 +42,14 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onSneak(AsyncPlayerChatEvent e)
+    public void onSneak(PlayerToggleSneakEvent e)
     {
-        e.getPlayer().sendMessage(ChatColor.valueOf("#27FBDA") + "Olá");
-        e.setMessage(translate(e.getMessage()));
-    }
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0F, 1.0F);
 
-    private String translate (String string)
-    {
-        Matcher matcher = pattern.matcher(string);
-        while(matcher.find()) {
-            String color = string.substring(matcher.start(), matcher.end());
-            string = string.replace(color, ChatColor.valueOf(color) + "");
-            matcher = pattern.matcher(string);
-        }
-        return string;
     }
 
 
-}
+    }
+
+
+
