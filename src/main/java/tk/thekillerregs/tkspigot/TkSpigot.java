@@ -31,15 +31,21 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
+private HashMap<UUID, UUID> recentMessages;
 
     @Override
     public void onEnable() {
     getCommand("punish").setExecutor(new PunishCommand());
+    getCommand("msg").setExecutor(new MessageCommand());
+    getCommand("r").setExecutor(new ReplyCommand());
     Bukkit.getPluginManager().registerEvents(this, this);
+    recentMessages = new HashMap<>();
     }
 
     @Override
@@ -47,22 +53,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    @EventHandler
-    public void onPing(ServerListPingEvent e)
-    {
-        e.setMaxPlayers(999);
-        e.setMotd("§bcustom motd");
-        try{
-            //Must be on server main folder along with jar
-            e.setServerIcon(Bukkit.loadServerIcon(new File("icon.png")));
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
 
-
-    }
 }
 
 
