@@ -20,6 +20,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -29,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.io.File;
 import java.util.regex.Matcher;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
@@ -46,19 +48,18 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onSneak(PlayerToggleSneakEvent e)
+    public void onPing(ServerListPingEvent e)
     {
-    if(e.isSneaking())
-    {
-        Entity bat = e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.BAT);
-        Entity bat2 = e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.BAT);
-        bat.addPassenger(e.getPlayer());
-        e.getPlayer().addPassenger(bat2);
-
-
-
-    }
-
+        e.setMaxPlayers(999);
+        e.setMotd("§bcustom motd");
+        try{
+            //Must be on server main folder along with jar
+            e.setServerIcon(Bukkit.loadServerIcon(new File("icon.png")));
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
 
 
     }
