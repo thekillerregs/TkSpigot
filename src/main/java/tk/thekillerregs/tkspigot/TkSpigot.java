@@ -45,10 +45,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent e)
     {
-      e.getPlayer().launchProjectile(Snowball.class, e.getPlayer().getLocation().getDirection());
-      
-
-
+      e.getPlayer().spawnParticle(Particle.SPELL, e.getPlayer().getLocation().add(0,1,0), 5);
     }
 
 
