@@ -29,6 +29,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.HashMap;
@@ -37,38 +38,39 @@ import java.util.regex.Matcher;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-<<<<<<< HEAD
-
-=======
-private HashMap<UUID, UUID> recentMessages;
->>>>>>> a750112b0a93e329a6eae3aaa6071086a8b21927
+    //Runnables
+    //Avoid change things like blocks and worlds in the main thread
+    //It can cause corruption
 
     @Override
     public void onEnable() {
-    getCommand("punish").setExecutor(new PunishCommand());
-    getCommand("msg").setExecutor(new MessageCommand());
-    getCommand("r").setExecutor(new ReplyCommand());
+
+
+
     Bukkit.getPluginManager().registerEvents(this, this);
-<<<<<<< HEAD
-        //    }
-        //
-        //    @Override
-        //    public void onDisable() {
-        //        // Plugin shutdown logic
+
+
     }
 
 
     @EventHandler
-    public void onSneak(PlayerToggleSneakEvent e)
+    public void onEvent(PlayerJoinEvent e)
     {
+      BukkitTask task =  Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
+            e.getPlayer().sendMessage("§bJá fazem 5 segundos que você entrou!");
+        }, 100);
 
+      int i = 1;
+      Bukkit.getScheduler().runTaskTimer(this, () -> {
+          e.getPlayer().sendMessage("§cTimer bateu");
+      }, 200, 100);
 
     }
 
 
-=======
-    recentMessages = new HashMap<>();
-    }
+
+
+
 
     @Override
     public void onDisable() {
@@ -76,7 +78,7 @@ private HashMap<UUID, UUID> recentMessages;
     }
 
 
->>>>>>> a750112b0a93e329a6eae3aaa6071086a8b21927
+
 }
 
 
