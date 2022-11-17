@@ -38,32 +38,19 @@ import java.util.regex.Matcher;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-    //Runnables
-    //Avoid change things like blocks and worlds in the main thread
-    //It can cause corruption
+
 
     @Override
     public void onEnable() {
-
-
-
     Bukkit.getPluginManager().registerEvents(this, this);
-
-
+    Bukkit.getPluginCommand("menu").setExecutor(new GUICommand());
     }
 
 
     @EventHandler
     public void onEvent(PlayerJoinEvent e)
     {
-      BukkitTask task =  Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
-            e.getPlayer().sendMessage("§bJá fazem 5 segundos que você entrou!");
-        }, 100);
 
-      int i = 1;
-      Bukkit.getScheduler().runTaskTimer(this, () -> {
-          e.getPlayer().sendMessage("§cTimer bateu");
-      }, 200, 100);
 
     }
 
