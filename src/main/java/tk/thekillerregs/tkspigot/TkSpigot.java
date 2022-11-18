@@ -3,6 +3,7 @@ package tk.thekillerregs.tkspigot;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.block.data.type.Fire;
@@ -43,14 +44,15 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
     Bukkit.getPluginManager().registerEvents(this, this);
-    getCommand("fruit").setExecutor(new FruitCommand());
-    getCommand("fruit").setTabCompleter(new FruitCommand());
     }
 
 
     @EventHandler
-    public void onEvent(PlayerJoinEvent e)
+    public void onEvent(PlayerToggleSneakEvent e)
     {
+        if(e.getPlayer().getInventory().getItemInMainHand()==null ^ e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR)
+        return;
+        Player player = e.getPlayer();
 
 
     }
