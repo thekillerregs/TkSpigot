@@ -43,8 +43,8 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
     Bukkit.getPluginManager().registerEvents(this, this);
-    Bukkit.getPluginCommand("menu").setExecutor(new GUICommand());
-    Bukkit.getPluginManager().registerEvents(new GUIListener(), this);
+    getCommand("fruit").setExecutor(new FruitCommand());
+    getCommand("fruit").setTabCompleter(new FruitCommand());
     }
 
 
