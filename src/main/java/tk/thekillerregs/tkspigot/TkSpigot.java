@@ -8,6 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
+import org.bukkit.event.server.MapInitializeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -21,30 +25,6 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        Data data = new Data("Tk", true, new Date());
-        File file = new File(getDataFolder(), "data.json");
-        getDataFolder().mkdirs();
-
-
-            try {
-
-                if(!file.exists()) file.createNewFile();
-
-                Gson gson = new Gson();
-                Reader reader = new FileReader(file);
-                Data readData = gson.fromJson(reader, Data.class);
-                System.out.println(readData.getPlayerName());
-
-
-            } catch (IOException e) {
-                System.out.println("deu n");
-                e.printStackTrace();
-
-            }
-
-
-
-
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -52,10 +32,30 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onEvent(PlayerToggleSneakEvent e)
     {
+        ItemStack itemStack = new ItemStack(Material.FILLED_MAP);
+        MapMeta meta = (MapMeta) itemStack.getItemMeta();
+        MapView view = Bukkit.createMap(e.getPlayer().getWorld());
+        view.getRenderers().forEach(m -> {
+            view.removeRenderer(m);
+        });
+        view.addRenderer(new TkRenderer());
+       meta.setMapView(view);
+       itemStack.setItemMeta(meta);
+       e.getPlayer().getInventory().addItem(itemStack);
 
 
 
-    }
+
+
+
+
+
+
+
+        }
+
+
+
 
 
 
