@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
@@ -15,6 +16,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -27,21 +30,17 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     //Use reader and writer class alongside with Gson
 
     @Override
-    public void onEnable() {
-        ItemStack lead = new ItemStack(Material.NETHERITE_SCRAP);
-        ItemMeta im = lead.getItemMeta();
-        im.setDisplayName("§8Lead");
-        lead.setItemMeta(im);
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, "CUSTOM_LEAD"), lead);
-        recipe.shape(
-                "CIC",
-                "IPI",
-                "CIC");
-        recipe.setIngredient('C', Material.CHAIN);
-        recipe.setIngredient('P', Material.PHANTOM_MEMBRANE);
-        recipe.setIngredient('I', Material.IRON_NUGGET);
-        Bukkit.addRecipe(recipe);
-        Bukkit.getPluginManager().registerEvents(this, this);
+    public void onEnable(){
+        NamespacedKey key = new NamespacedKey(this, "nickname");
+        Player player = Bukkit.getPlayer("thekillerregs");
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        pdc.set(key, PersistentDataType.STRING, "tk");
+        
+
+        if(player.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+            String nickname = player.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+
+        }
     }
 
 
@@ -50,11 +49,6 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     {
 
     }
-
-
-
-
-
 
 
     @Override
