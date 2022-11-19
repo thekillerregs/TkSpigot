@@ -1,52 +1,50 @@
 package tk.thekillerregs.tkspigot;
 
 
-import com.google.gson.Gson;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 
-import org.bukkit.event.server.MapInitializeEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.map.MapView;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import java.io.*;
-import java.util.Date;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
+private Cache<UUID, Long> cooldown = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
 
-    //Json files
-    //Use reader and writer class alongside with Gson
 
     @Override
     public void onEnable(){
-        NamespacedKey key = new NamespacedKey(this, "nickname");
-        Player player = Bukkit.getPlayer("thekillerregs");
-        PersistentDataContainer pdc = player.getPersistentDataContainer();
-        pdc.set(key, PersistentDataType.STRING, "tk");
-        
-
-        if(player.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-            String nickname = player.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-
-        }
+    Bukkit.getPluginManager().registerEvents(this, this);
     }
 
 
     @EventHandler
-    public void onEvent(PlayerToggleSneakEvent e)
+    public void onEvent(BlockPlaceEvent e)
     {
+        if(cooldown.asMap().containsKey(e.getPlayer().getUniqueId()))
+        {
+            long distance = cooldown.asMap().get(e.getPlayer().getUniqueId()) - System.currentTimeMillis();
+
+            e.getPlayer().sendMessage("§cVocê só pode colocar blocos daqui a " + TimeUnit.MILLISECONDS.toSeconds(distance) + "§c segundos.");
+            e.setCancelled(true);
+        }
+        else{
+            e.getPlayer().sendMessage("§aVocê colocou um bloco!");
+            cooldown.asMap().put(e.getPlayer().getUniqueId(), System.currentTimeMillis()+5000);
+        }
+
 
     }
 
