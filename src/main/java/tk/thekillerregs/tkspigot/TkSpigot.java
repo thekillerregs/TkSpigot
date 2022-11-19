@@ -34,6 +34,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -49,21 +50,18 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onEvent(PlayerInteractEvent e)
+    public void onEvent(PlayerToggleSneakEvent e)
     {
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            BlockState state = e.getClickedBlock().getState();
-            BlockData data = state.getBlockData();
-            if (data instanceof Cake) {
-                ((Cake) data).setBites(2);
-            } else if (data instanceof GlassPane) {
-                ((GlassPane) data).setWaterlogged(true);
-            } else if (data instanceof Rail) {
-                ((Rail) data).setShape(Rail.Shape.NORTH_WEST);
-            }
-            state.setBlockData(data);
-            state.update();
-        }
+        if(!e.isSneaking()) return;
+        if(e.getPlayer().getTargetBlockExact(5)==null) return;
+        Player player = e.getPlayer();
+        if(e.getPlayer().getTargetBlockExact(5).getType().equals(Material.OAK_SIGN))
+        {
+            player.sendSignChange(player.getTargetBlockExact(5).getLocation(), new String[]{"§cOii", "", "Como vai?", "§dtehee"});
+
+        } else
+
+        player.sendBlockChange(player.getTargetBlockExact(5).getLocation(), Material.DIAMOND_BLOCK.createBlockData());
     }
 
 
