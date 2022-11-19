@@ -6,6 +6,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Skull;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.block.data.BlockData;
@@ -52,16 +53,14 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onEvent(PlayerToggleSneakEvent e)
     {
-        if(!e.isSneaking()) return;
-        if(e.getPlayer().getTargetBlockExact(5)==null) return;
-        Player player = e.getPlayer();
-        if(e.getPlayer().getTargetBlockExact(5).getType().equals(Material.OAK_SIGN))
-        {
-            player.sendSignChange(player.getTargetBlockExact(5).getLocation(), new String[]{"§cOii", "", "Como vai?", "§dtehee"});
+       Player player = e.getPlayer();
+       ItemStack is = new ItemStack(Material.PLAYER_HEAD);
+       SkullMeta sm = (SkullMeta) is.getItemMeta();
+       sm.setOwningPlayer(player);
+       is.setItemMeta(sm);
+        
 
-        } else
 
-        player.sendBlockChange(player.getTargetBlockExact(5).getLocation(), Material.DIAMOND_BLOCK.createBlockData());
     }
 
 
