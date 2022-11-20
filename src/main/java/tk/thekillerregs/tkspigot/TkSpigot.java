@@ -14,7 +14,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable(){
-    Bukkit.getPluginManager().registerEvents(new SidebarListener(), this);
+    Bukkit.getPluginManager().registerEvents(new NametagListener(), this);
 
 
 
