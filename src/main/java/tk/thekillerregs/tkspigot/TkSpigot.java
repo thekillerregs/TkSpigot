@@ -1,28 +1,19 @@
 package tk.thekillerregs.tkspigot;
 
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.*;
-
-import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
-    PermissionAttachment attachment;
-private HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
 
     @Override
     public void onEnable(){
@@ -35,48 +26,36 @@ private HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
 
 
     @EventHandler
-    public void onEvent(BlockPlaceEvent e)
+    public void onEvent(PlayerJoinEvent e)
     {
-        Player player = e.getPlayer();
-        if(!player.hasPermission("tk.blocks")){
-            player.sendMessage("§cVocê não pode colocar blocos!!!!!");
-            e.setCancelled(true);
-        }
+        Player p = e.getPlayer();
+        Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective obj = board.registerNewObjective("test", "dummy");
+        //Up to 33 characters below 1.13
+        //Unlimited afterwards
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.setDisplayName("§b§lSCORE DO TK");
+
+        //Up to 58 characters below 1.12
+        //140 characters afterwards
+        Score blank = obj.getScore("");
+        blank.setScore(4);
+        Score name = obj.getScore(ChatColor.AQUA + p.getName());
+        name.setScore(3);
+
+        Score blank2 = obj.getScore(" ");
+        blank2.setScore(2);
+        Score website = obj.getScore("§ewww.thekillerregs.tk");
+        website.setScore(1);
+
+
+
+        p.setScoreboard(board);
+
 
     }
 
-    @EventHandler
-    public void onSneak(PlayerToggleSneakEvent e )
-    {
-        Player player = e.getPlayer();
-        if(e.isSneaking())
-        {
-            if(!perms.containsKey(player.getUniqueId()))
-            {
-                attachment = player.addAttachment(this);
-                perms.put(player.getUniqueId(), attachment);
-            }
-            else{
-                attachment = perms.get(player.getUniqueId());
-            }
 
-            if(player.hasPermission("tk.blocks"))
-            {
-                attachment.unsetPermission("tk.blocks");
-                player.sendMessage("§cVocê perdeu a permissão de colocar blocos!");
-            }
-            else{
-                attachment.setPermission("tk.blocks", true);
-                player.sendMessage("§aVocê recebeu a permissão de colocar blocos!");
-            }
-
-
-
-
-        }
-
-
-    }
 
 
     @Override
