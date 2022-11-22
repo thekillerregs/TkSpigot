@@ -6,10 +6,14 @@ import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.minecraft.world.inventory.ClickAction;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
@@ -36,27 +40,37 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onPlace(PlayerJoinEvent e)
+    public void onEvent(PlayerToggleSneakEvent e)
     {
-        TextComponent clickable = new TextComponent("§b§lClickable!");
-        clickable.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/gamemode survival"));
+      if(e.isSneaking())
+      {
+          ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+          BookMeta meta = (BookMeta) book.getItemMeta();
+          meta.setAuthor("§bthekillerregs");
+          meta.setTitle("§cHow to get away with §4murder");
 
-        TextComponent none = new TextComponent("\n§c§lNothing");
-        TextComponent hoverable = new TextComponent("\n§a§lHoverable!");
+          TextComponent clickable = new TextComponent("§cclicaria agui");
+           clickable.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "2"));
 
-        hoverable.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§aOiii")));
-        e.getPlayer().spigot().sendMessage(new BaseComponent[]{clickable, none, hoverable});
+           TextComponent none = new TextComponent("\n§a tehee");
+           TextComponent hoverable = new TextComponent("\n§ahoveraria agui");
+           hoverable.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§aoiiiii")));
 
-        TextComponent start = new TextComponent("§aThis is my ");
-        TextComponent twitter = new TextComponent("§btwitter");
-        twitter.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitter.com/thekillerregs"));
-        twitter.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§bClick to open it :)")));
-        TextComponent end = new TextComponent("§a.");
+           BaseComponent[] page = new BaseComponent[]{clickable, none, hoverable};
+           meta.spigot().addPage(page);
+           meta.addPage("OIOIOIOIOI\n\n§cOIIIIIIIIIIIIIII");
 
-        start.addExtra(twitter);
-        start.addExtra(end);
 
-        e.getPlayer().spigot().sendMessage(start);
+
+
+
+
+
+          book.setItemMeta(meta);
+            e.getPlayer().getInventory().addItem(book);
+
+
+      }
 
     }
 
