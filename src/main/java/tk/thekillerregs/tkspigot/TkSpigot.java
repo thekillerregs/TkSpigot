@@ -1,48 +1,33 @@
 package tk.thekillerregs.tkspigot;
 
 
+import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import net.minecraft.world.inventory.ClickAction;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import tk.thekillerregs.tkspigot.manager.NametagManager;
-import tk.thekillerregs.tkspigot.manager.RankManager;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
-/*
-        RANK SYSTEM
-        /rank command
-        Save in .yml file
-        Custom permissions
-        Nametags and Chat Display
-
- */
-
-    private RankManager rankManager;
-    private NametagManager nametagManager;
 
 
-    public NametagManager getNametagManager() {
-        return nametagManager;
-    }
+
+
 
     @Override
     public void onEnable(){
-    getCommand("rank").setExecutor(new RankCommand(this));
-    getCommand("rank").setTabCompleter(new RankCommand(this));
-    rankManager = new RankManager(this);
-    nametagManager = new NametagManager(this);
+        Bukkit.getPluginManager().registerEvents(this, this);
 
 
-    Bukkit.getPluginManager().registerEvents(new RankListener(this), this);
-    Bukkit.getPluginManager().registerEvents(this, this);
     }
 
 
-    public RankManager getRankManager() {
-        return rankManager;
-    }
+
+
 
     @Override
     public void onDisable() {
@@ -51,9 +36,27 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent e)
+    public void onPlace(PlayerJoinEvent e)
     {
-        if(!e.getPlayer().hasPermission("tk.blocks.place")) e.setCancelled(true);
+        TextComponent clickable = new TextComponent("§b§lClickable!");
+        clickable.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/gamemode survival"));
+
+        TextComponent none = new TextComponent("\n§c§lNothing");
+        TextComponent hoverable = new TextComponent("\n§a§lHoverable!");
+
+        hoverable.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§aOiii")));
+        e.getPlayer().spigot().sendMessage(new BaseComponent[]{clickable, none, hoverable});
+
+        TextComponent start = new TextComponent("§aThis is my ");
+        TextComponent twitter = new TextComponent("§btwitter");
+        twitter.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitter.com/thekillerregs"));
+        twitter.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§bClick to open it :)")));
+        TextComponent end = new TextComponent("§a.");
+
+        start.addExtra(twitter);
+        start.addExtra(end);
+
+        e.getPlayer().spigot().sendMessage(start);
 
     }
 
