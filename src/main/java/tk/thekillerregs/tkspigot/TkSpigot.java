@@ -33,12 +33,15 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @Override
     public void onEnable(){
         Bukkit.getPluginManager().registerEvents(this, this);
-        WorldEdit we = WorldEdit.getInstance();
+
 
 
     }
 
-
+    public String getWord()
+    {
+        return "thekillerregs";
+    }
 
 
 
