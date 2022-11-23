@@ -4,6 +4,7 @@ package tk.thekillerregs.tkspigot;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.sk89q.worldedit.WorldEdit;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -32,6 +33,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @Override
     public void onEnable(){
         Bukkit.getPluginManager().registerEvents(this, this);
+        WorldEdit we = WorldEdit.getInstance();
 
 
     }
@@ -49,11 +51,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     @EventHandler
     public void onEvent(PlayerToggleSneakEvent e)
     {
-        String string = "Essa é uma mensagem legal";
-        ServerBroadcastEvent sbe = new ServerBroadcastEvent(e.getPlayer(), string);
-        Bukkit.getPluginManager().callEvent(sbe);
 
-        if(!sbe.isCancelled())Bukkit.broadcastMessage(string);
 
 
     }
