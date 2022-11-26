@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -41,10 +42,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
     }
 
-    public String getWord()
-    {
-        return "thekillerregs";
-    }
+
 
 
 
@@ -59,50 +57,18 @@ public final class TkSpigot extends JavaPlugin implements Listener {
     {
     if(e.isSneaking())
     {
-        Location l1 = new Location(e.getPlayer().getWorld(), -176 ,112 ,-209);
-        Location l2 = new Location(e.getPlayer().getWorld(), -184 ,109 ,-215);
-        Cuboid cuboid = new Cuboid(l1, l2);
-        cuboid.getBlocks().forEach(x -> {
-            x.setType(Material.AIR);
-        });
+       ItemStack itemStack = new ItemStack(Material.PAPER);
+       ItemMeta meta = itemStack.getItemMeta();
+       meta.setCustomModelData(1234567);
+        itemStack.setItemMeta(meta);
+        e.getPlayer().getInventory().addItem(itemStack);
 
+    }
 
 
     }
 
 
-
-
-
-
-    }
-
-    private Location l1;
-    private Location l2;
-    private Cuboid cuboid;
-
-    @EventHandler
-    public void onShoot(ProjectileLaunchEvent e)
-    {
-     if(e.getEntityType().equals(EntityType.ARROW)) {
-         Arrow arrow = (Arrow) e.getEntity();
-                l1 = new Location(arrow.getWorld(), -176, 112, -209);
-                l2 = new Location(arrow.getWorld(), -184, 109, -215);
-                cuboid = new Cuboid(l1, l2);
-
-        Bukkit.getScheduler().runTaskTimer(this, () -> {
-            if(cuboid.contains(arrow.getLocation()))
-            {
-                arrow.setVelocity(new Vector(0, -10000, 0));
-            }
-        }, 2, 2);
-
-
-
-     }
-
-
-    }
 
 
 }
