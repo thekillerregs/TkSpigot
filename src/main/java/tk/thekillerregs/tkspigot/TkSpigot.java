@@ -4,9 +4,17 @@ package tk.thekillerregs.tkspigot;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.inventory.ClickAction;
 import org.bukkit.Bukkit;
@@ -23,6 +31,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,17 +40,35 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import javax.security.auth.login.LoginException;
+
 public final class TkSpigot extends JavaPlugin implements Listener {
 
+    private String token = "vc mim hackearia vc teria corage";
+    private JDA jda;
 
-    //This GUI paging system is intended to automatically set the ammount of pages given a determined set of items. NOT to switch between new and different GUIs through pages;
-
-
+    public JDA getJda() {
+        return jda;
+    }
 
     @Override
     public void onEnable(){
         Bukkit.getPluginManager().registerEvents(this, this);
-        getCommand("gui").setExecutor(new GUICommand());
+        JDABuilder builder = JDABuilder.createDefault(token);
+        builder.setActivity(Activity.watching("yuri"));
+        builder.setStatus(OnlineStatus.ONLINE);
+        builder.addEventListeners(new DiscordListener());
+        builder.enableIntents(GatewayIntent.MESSAGE_CONTENT);
+        try{
+        jda = builder.build();
+            System.out.println("Deu certo o bot chat");
+        } catch(InvalidTokenException e)
+        {
+            e.printStackTrace();
+        } catch(IllegalAccessError e)
+        {
+            e.printStackTrace();
+        }
 
 
     }
@@ -57,28 +84,19 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onEvent(InventoryClickEvent e)
+    public void onChat(AsyncPlayerChatEvent e)
     {
-        if(e.getInventory()!= null && e.getCurrentItem()!= null && e.getView().getTitle().contains("Page Test")){
-        int page = Integer.parseInt(e.getInventory().getItem(0).getItemMeta().getLocalizedName());
-        if(e.getRawSlot()==0 && e.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE))
+        if(e.getPlayer()!=null)
         {
-        new GUI((Player) e.getWhoClicked(), page-1);
+            getJda().getTextChannelById(null).sendMessage(e.getPlayer().getDisplayName()+ ": "+ e.getMessage()).queue();
         }
-        else if(e.getRawSlot() == 8 && e.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE))
-        {
-        new GUI((Player) e.getWhoClicked(), page+1);
-        }
-        e.setCancelled(true);
     }
-
 
     }
 
 
 
 
-}
 
 
 

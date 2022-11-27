@@ -4,6 +4,5 @@ main: tk.thekillerregs.tkspigot.TkSpigot
 authors: [ thekillerregs ]
 api-version: '1.19'
 commands:
-  gui:
 
 
