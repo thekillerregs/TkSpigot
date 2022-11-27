@@ -21,6 +21,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -32,12 +34,14 @@ import org.bukkit.util.Vector;
 public final class TkSpigot extends JavaPlugin implements Listener {
 
 
+    //This GUI paging system is intended to automatically set the ammount of pages given a determined set of items. NOT to switch between new and different GUIs through pages;
+
 
 
     @Override
     public void onEnable(){
         Bukkit.getPluginManager().registerEvents(this, this);
-
+        getCommand("gui").setExecutor(new GUICommand());
 
 
     }
@@ -53,16 +57,19 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
     @EventHandler
-    public void onEvent(PlayerToggleSneakEvent e)
+    public void onEvent(InventoryClickEvent e)
     {
-    if(e.isSneaking())
-    {
-       ItemStack itemStack = new ItemStack(Material.PAPER);
-       ItemMeta meta = itemStack.getItemMeta();
-       meta.setCustomModelData(1234567);
-        itemStack.setItemMeta(meta);
-        e.getPlayer().getInventory().addItem(itemStack);
-
+        if(e.getInventory()!= null && e.getCurrentItem()!= null && e.getView().getTitle().contains("Page Test")){
+        int page = Integer.parseInt(e.getInventory().getItem(0).getItemMeta().getLocalizedName());
+        if(e.getRawSlot()==0 && e.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE))
+        {
+        new GUI((Player) e.getWhoClicked(), page-1);
+        }
+        else if(e.getRawSlot() == 8 && e.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE))
+        {
+        new GUI((Player) e.getWhoClicked(), page+1);
+        }
+        e.setCancelled(true);
     }
 
 
