@@ -43,4 +43,9 @@ public class Database {
         return conn!=null;
     }
 
+    public Connection getConnection()
+    {
+        return conn;
+    }
+
 }
