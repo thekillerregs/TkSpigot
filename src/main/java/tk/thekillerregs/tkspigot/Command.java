@@ -13,7 +13,8 @@ import java.util.List;
 
 public abstract class Command extends BukkitCommand {
 
-    // (i like this class)
+
+    //(i love this class)
 
     public Command(String command, String[] aliases, String description, String permission) {
         super(command);
