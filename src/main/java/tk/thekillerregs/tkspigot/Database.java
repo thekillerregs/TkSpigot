@@ -1,5 +1,7 @@
 package tk.thekillerregs.tkspigot;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,32 +22,35 @@ public class Database {
 
     private static Connection conn = null;
 
+    private HikariDataSource hikari;
 
     public void connect() throws SQLException
     {
-        conn = DriverManager.getConnection("jdbc:mysql://" + HOST +":" + PORT + "/"+ DATABASE + "?useSSL=false", USERNAME, PASSWORD);
+     hikari = new HikariDataSource();
+     hikari.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
+     hikari.addDataSourceProperty("serverName", HOST);
+     hikari.addDataSourceProperty("port", PORT);
+     hikari.addDataSourceProperty("databaseName", DATABASE);
+     hikari.addDataSourceProperty("user", USERNAME);
+     hikari.addDataSourceProperty("password", PASSWORD);
     }
 
     public void disconnect()
     {
         if(isConnected()) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            hikari.close();
         }
     }
 
     public boolean isConnected()
     {
 
-        return conn!=null;
+        return hikari!=null;
     }
 
-    public Connection getConnection()
+    public HikariDataSource getHikari()
     {
-        return conn;
+        return hikari;
     }
 
 }

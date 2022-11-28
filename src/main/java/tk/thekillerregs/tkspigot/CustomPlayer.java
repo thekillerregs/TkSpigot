@@ -1,5 +1,6 @@
 package tk.thekillerregs.tkspigot;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,33 +18,35 @@ public class CustomPlayer {
     {
         this.uuid=uuid;
 
-
-            PreparedStatement statement = tkSpigot.getDb().getConnection().prepareStatement(
-                    "SELECT RANK, COINS FROM players WHERE UUID = ?;"
-            );
+        try( Connection connection = tkSpigot.getDb().getHikari().getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement("SELECT RANK, COINS FROM players WHERE UUID = ?;");
             statement.setString(1, uuid.toString());
             ResultSet rs = statement.executeQuery();
             if(rs.next())
             {
-            rank = rs.getString("RANK");
-            coins = rs.getInt("COINS");
+                rank = rs.getString("RANK");
+                coins = rs.getInt("COINS");
             }
             else{
                 rank = "GUEST";
                 coins = 0;
-            PreparedStatement insert = tkSpigot.getDb().getConnection().prepareStatement(
-            "INSERT INTO players (ID, UUID, RANK, COINS) " +
-                    "VALUES (default," +
-                    "'"+ uuid + "'," +
-                    "'" + rank +"'," + coins+");"
-            );
-            insert.executeUpdate();
-
-
+                PreparedStatement insert = connection.prepareStatement(
+                        "INSERT INTO players (ID, UUID, RANK, COINS) " +
+                                "VALUES (default," +
+                                "'"+ uuid + "'," +
+                                "'" + rank +"'," + coins+");"
+                );
+                insert.executeUpdate();
+            }
+        } catch(SQLException e)
+        {
 
         }
-    }
 
+
+    }
+/*
     public void setRank(String rank) {
         this.rank = rank;
         PreparedStatement st = null;
@@ -56,7 +59,7 @@ public class CustomPlayer {
 
     }
 
-    public void setCoins(int coins) {
+       public void setCoins(int coins) {
         this.coins = coins;
         PreparedStatement st = null;
         try {
@@ -66,7 +69,7 @@ public class CustomPlayer {
             e.printStackTrace();
         }
     }
-
+*/
     public UUID getUuid() {
         return uuid;
     }
