@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import tk.thekillerregs.tkspigot.Manager.ArenaManager;
 import tk.thekillerregs.tkspigot.Manager.ConfigManager;
 
 
@@ -21,11 +22,12 @@ import java.util.UUID;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
-
+private ArenaManager arenaManager;
 
     @Override
     public void onEnable(){
         ConfigManager.setupConfig(this);
+        arenaManager = new ArenaManager(this);
     }
 
 
@@ -34,13 +36,9 @@ public final class TkSpigot extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-
-
-
-
-
-
-
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 }
 
 
