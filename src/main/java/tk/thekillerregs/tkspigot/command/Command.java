@@ -1,4 +1,4 @@
-package tk.thekillerregs.tkspigot;
+package tk.thekillerregs.tkspigot.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

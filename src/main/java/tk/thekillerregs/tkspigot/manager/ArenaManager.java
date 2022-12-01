@@ -1,4 +1,4 @@
-package tk.thekillerregs.tkspigot.Manager;
+package tk.thekillerregs.tkspigot.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -42,6 +42,8 @@ public class ArenaManager {
             if(arena.getPlayers().contains(player.getUniqueId())) return arena;
         }
         return null;
+
+
     }
 
     public Arena getArena(int id)

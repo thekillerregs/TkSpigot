@@ -1,24 +1,14 @@
 package tk.thekillerregs.tkspigot;
 
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import tk.thekillerregs.tkspigot.Manager.ArenaManager;
-import tk.thekillerregs.tkspigot.Manager.ConfigManager;
-
-
-import java.sql.SQLException;
-import java.util.UUID;
+import tk.thekillerregs.tkspigot.command.ArenaCommand;
+import tk.thekillerregs.tkspigot.listener.ConnectListener;
+import tk.thekillerregs.tkspigot.listener.GameListener;
+import tk.thekillerregs.tkspigot.manager.ArenaManager;
+import tk.thekillerregs.tkspigot.manager.ConfigManager;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
@@ -28,6 +18,11 @@ private ArenaManager arenaManager;
     public void onEnable(){
         ConfigManager.setupConfig(this);
         arenaManager = new ArenaManager(this);
+
+        Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
+
+        getCommand("arena").setExecutor(new ArenaCommand(this));
     }
 
 

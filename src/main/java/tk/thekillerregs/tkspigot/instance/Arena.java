@@ -4,9 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
-import tk.thekillerregs.tkspigot.Manager.ConfigManager;
+import tk.thekillerregs.tkspigot.manager.ConfigManager;
 import tk.thekillerregs.tkspigot.TkSpigot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,9 @@ public class Arena {
     private int id;
     private Location spawn;
     private Countdown countdown;
+
+
+
     private List<UUID> players;
     private GameState state;
     private Game game;
@@ -28,6 +32,7 @@ public class Arena {
         this.countdown = new Countdown(tkSpigot, this);
         this.game = new Game(this);
         this.tkSpigot = tkSpigot;
+        this.players = new ArrayList<UUID>();
     }
 
     //GAME
@@ -45,6 +50,7 @@ public class Arena {
             players.forEach(u -> {Bukkit.getPlayer(u).teleport(spawn);});
             players.clear();
         }
+        sendTitle("", "");
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(tkSpigot, this);
@@ -80,6 +86,20 @@ public class Arena {
     {
         players.remove(player.getUniqueId());
         player.teleport(ConfigManager.getLobbySpawn());
+        player.sendTitle("", "");
+
+        if(state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers())
+        {
+        sendMessage("§cA contagem foi parada pois não há jogadores suficientes!");
+        reset(false);
+        return;
+        }
+        else if(state== GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers())
+        {
+         sendMessage("§cA partida foi encerrada devido à baixa quantia de players!");
+         reset(false);
+        }
+
     }
 
 
@@ -105,5 +125,7 @@ public class Arena {
     public void setState(GameState state) {
         this.state = state;
     }
+
+    public Game getGame() {return game;}
 
 }

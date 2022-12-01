@@ -1,4 +1,4 @@
-package tk.thekillerregs.tkspigot.Manager;
+package tk.thekillerregs.tkspigot.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

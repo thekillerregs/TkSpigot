@@ -2,7 +2,7 @@ package tk.thekillerregs.tkspigot.instance;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import tk.thekillerregs.tkspigot.GameState;
-import tk.thekillerregs.tkspigot.Manager.ConfigManager;
+import tk.thekillerregs.tkspigot.manager.ConfigManager;
 import tk.thekillerregs.tkspigot.TkSpigot;
 
 public class Countdown extends BukkitRunnable {
@@ -37,6 +37,10 @@ public class Countdown extends BukkitRunnable {
         if(countDownSeconds<= 10 || countDownSeconds % 15 ==0) {
         arena.sendMessage("§aA partida iniciará em §f"+ countDownSeconds + "§asegundo" + (countDownSeconds == 1 ? "" : "s") +".");
 
+        }
+        if(countDownSeconds<= 5) {
+            arena.sendTitle("§a" + countDownSeconds + "§asegundo" + (countDownSeconds == 1 ? "" : "s"),
+                    "§7até a partida começar!");
         }
             countDownSeconds--;
 
