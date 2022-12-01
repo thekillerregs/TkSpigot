@@ -68,6 +68,11 @@ public class Arena {
         players.forEach(id -> Bukkit.getPlayer(id).sendTitle(title, subTitle));
     }
 
+    public void sendTitle(String title, String subTitle, int in, int stay, int out)
+    {
+        players.forEach(id -> Bukkit.getPlayer(id).sendTitle(title, subTitle, in, stay, out));
+    }
+
     //PLAYERS
 
     public void addPlayer(Player player)

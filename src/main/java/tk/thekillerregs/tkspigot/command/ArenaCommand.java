@@ -5,15 +5,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ArenaCommand implements CommandExecutor {
+public class ArenaCommand implements CommandExecutor, TabCompleter {
 
     private TkSpigot tkSpigot;
 
@@ -30,7 +33,7 @@ public class ArenaCommand implements CommandExecutor {
             if(args.length==1 && args[0].equalsIgnoreCase("list"))
             {
                 p.sendMessage("§aAs arenas disponíveis são:");
-                tkSpigot.getArenaManager().getArenas().forEach(a-> p.sendMessage("§a- " + a.getId()+ "("+a.getState().name()+")"));
+                tkSpigot.getArenaManager().getArenas().forEach(a-> p.sendMessage("§a- " + a.getId()+ " §e("+a.getState().name()+")"));
 
             }
             else if(args.length==1 && args[0].equalsIgnoreCase("leave"))
@@ -90,5 +93,20 @@ public class ArenaCommand implements CommandExecutor {
     return false;
     }
 
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(args.length==1)
+        {
+            return StringUtil.copyPartialMatches(args[0], Arrays.asList("join", "leave", "list"), new ArrayList<>());
+        }
+        if(args.length==2 && args[0].equals("join"))
+        {
+            List<String> results = new ArrayList<>();
+            tkSpigot.getArenaManager().getArenas().forEach(a -> results.add(a.getId()+""));
+            return StringUtil.copyPartialMatches(args[1], results, new ArrayList<>());
 
+        }
+        return new ArrayList<>();
+    }
 }

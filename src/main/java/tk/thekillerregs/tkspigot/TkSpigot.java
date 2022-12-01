@@ -23,6 +23,7 @@ private ArenaManager arenaManager;
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
 
         getCommand("arena").setExecutor(new ArenaCommand(this));
+        getCommand("arena").setTabCompleter(new ArenaCommand(this));
     }
 
 

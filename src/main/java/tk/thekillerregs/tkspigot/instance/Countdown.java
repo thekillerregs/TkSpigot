@@ -31,6 +31,7 @@ public class Countdown extends BukkitRunnable {
         {
             cancel();
             arena.start();
+            arena.sendTitle("§aA partida começou!", "", 10, 10, 10);
             return;
         }
         if(countDownSeconds<= 10 || countDownSeconds % 15 ==0) {
