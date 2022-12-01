@@ -22,7 +22,6 @@ public class GameListener implements Listener {
         if(arena!=null && arena.getState().equals(GameState.LIVE))
         {
           arena.getGame().addPoint(e.getPlayer());
-
         }
 
     }

@@ -22,7 +22,6 @@ public class Countdown extends BukkitRunnable {
     {
         arena.setState(GameState.COUNTDOWN);
         runTaskTimer(tkSpigot, 0, 20);
-        arena.start();
     }
 
 
@@ -31,15 +30,15 @@ public class Countdown extends BukkitRunnable {
         if(countDownSeconds==0)
         {
             cancel();
-            //Arena Start
+            arena.start();
             return;
         }
         if(countDownSeconds<= 10 || countDownSeconds % 15 ==0) {
-        arena.sendMessage("§aA partida iniciará em §f"+ countDownSeconds + "§asegundo" + (countDownSeconds == 1 ? "" : "s") +".");
+        arena.sendMessage("§aA partida iniciará em §e"+ countDownSeconds + " §asegundo" + (countDownSeconds == 1 ? "" : "s") +".");
 
         }
         if(countDownSeconds<= 5) {
-            arena.sendTitle("§a" + countDownSeconds + "§asegundo" + (countDownSeconds == 1 ? "" : "s"),
+            arena.sendTitle("§e" + countDownSeconds + " §asegundo" + (countDownSeconds == 1 ? "" : "s"),
                     "§7até a partida começar!");
         }
             countDownSeconds--;
