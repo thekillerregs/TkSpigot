@@ -5,10 +5,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.thekillerregs.tkspigot.command.ArenaCommand;
+import tk.thekillerregs.tkspigot.kit.Kit;
+import tk.thekillerregs.tkspigot.kit.KitType;
 import tk.thekillerregs.tkspigot.listener.ConnectListener;
 import tk.thekillerregs.tkspigot.listener.GameListener;
 import tk.thekillerregs.tkspigot.manager.ArenaManager;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class TkSpigot extends JavaPlugin implements Listener {
 
@@ -24,6 +30,8 @@ private ArenaManager arenaManager;
 
         getCommand("arena").setExecutor(new ArenaCommand(this));
         getCommand("arena").setTabCompleter(new ArenaCommand(this));
+
+
     }
 
 
@@ -35,6 +43,10 @@ private ArenaManager arenaManager;
     public ArenaManager getArenaManager() {
         return arenaManager;
     }
+
+
+
+
 }
 
 

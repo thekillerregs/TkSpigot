@@ -4,10 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
+import tk.thekillerregs.tkspigot.kit.Kit;
+import tk.thekillerregs.tkspigot.kit.KitType;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
 import tk.thekillerregs.tkspigot.TkSpigot;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +27,7 @@ public class Arena {
 
 
     private List<UUID> players;
+    private HashMap<UUID, Kit> kits;
     private GameState state;
     private Game game;
 
@@ -33,6 +39,7 @@ public class Arena {
         this.game = new Game(this);
         this.tkSpigot = tkSpigot;
         this.players = new ArrayList<UUID>();
+        this.kits = new HashMap<>();
     }
 
     //GAME
@@ -47,9 +54,14 @@ public class Arena {
         if(kickPlayers)
         {
             Location spawn = ConfigManager.getLobbySpawn();
-            players.forEach(u -> {Bukkit.getPlayer(u).teleport(spawn);});
+            players.forEach(u -> {Player pu = Bukkit.getPlayer(u);
+                                    pu.teleport(spawn);
+                                    removeKit(pu.getUniqueId());});
             players.clear();
         }
+
+        kits.clear();
+
         sendTitle("", "");
         state = GameState.RECRUITING;
         countdown.cancel();
@@ -93,6 +105,8 @@ public class Arena {
         player.teleport(ConfigManager.getLobbySpawn());
         player.sendTitle("", "");
 
+        removeKit(player.getUniqueId());
+
         if(state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers())
         {
         sendMessage("§cA contagem foi parada pois não há jogadores suficientes!");
@@ -132,5 +146,31 @@ public class Arena {
     }
 
     public Game getGame() {return game;}
+
+    public HashMap<UUID, Kit> getKits() {
+        return kits;
+    }
+
+    public void removeKit(UUID uuid)
+    {
+    if(kits.containsKey(uuid))
+    {
+        kits.get(uuid).remove();
+        kits.remove(uuid);
+    }
+
+    }
+
+    public void setKit(UUID uuid, KitType type)
+    {
+        removeKit(uuid);
+        try {
+            //eu mitei muito nessa reflection pqpppp
+            kits.put(uuid, type.getKitClass().getConstructor(TkSpigot.class, KitType.class, UUID.class).newInstance(tkSpigot, type, uuid));
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

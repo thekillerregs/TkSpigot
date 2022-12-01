@@ -1,5 +1,6 @@
 package tk.thekillerregs.tkspigot.instance;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
 
@@ -21,6 +22,7 @@ public class Game {
     {
         arena.setState(GameState.LIVE);
         arena.sendMessage("§aO jogo começou! Seu objetivo é quebrar 20 blocos no menor tempo possível. Boa sorte!");
+        arena.getKits().keySet().forEach(u -> {arena.getKits().get(u).onStart(Bukkit.getPlayer(u));});
 
         arena.getPlayers().forEach( p -> points.put(p, 0));
 
