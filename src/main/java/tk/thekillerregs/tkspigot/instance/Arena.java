@@ -1,5 +1,6 @@
 package tk.thekillerregs.tkspigot.instance;
 
+import com.google.common.collect.TreeMultimap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import tk.thekillerregs.tkspigot.kit.Kit;
 import tk.thekillerregs.tkspigot.kit.KitType;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
 import tk.thekillerregs.tkspigot.TkSpigot;
+import tk.thekillerregs.tkspigot.team.Team;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class Arena {
 
     private List<UUID> players;
     private HashMap<UUID, Kit> kits;
+    private HashMap<UUID, Team> teams;
     private GameState state;
     private Game game;
 
@@ -38,6 +41,7 @@ public class Arena {
         this.tkSpigot = tkSpigot;
         this.players = new ArrayList<UUID>();
         this.kits = new HashMap<>();
+        this.teams = new HashMap<>();
     }
 
     //GAME
@@ -55,6 +59,7 @@ public class Arena {
                 removeKit(pu.getUniqueId());
             });
             players.clear();
+            teams.clear();
         }
 
         kits.clear();
@@ -85,7 +90,17 @@ public class Arena {
         players.add(player.getUniqueId());
         player.teleport(spawn);
 
+        TreeMultimap<Integer, Team> count = TreeMultimap.create();
+        for (Team team : Team.values())
+        {
+            count.put(getTeamCount(team), team);
+        }
+        Team lowest = (Team) count.values().toArray()[0];
+        setTeam(player, lowest);
+        player.sendMessage("§eVocê foi automaticamente adicionado no time " + lowest.getDisplay()+"§e.");
+
         player.sendMessage("§eEscolha seu kit com o comando §6/arena kit§e.");
+        player.sendMessage("§eEscolha seu time com o comando §6/arena team§e.");
 
         if (state.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
             countdown.start();
@@ -97,7 +112,7 @@ public class Arena {
         players.remove(player.getUniqueId());
         player.teleport(ConfigManager.getLobbySpawn());
         player.sendTitle("", "");
-
+        removeTeam(player);
         removeKit(player.getUniqueId());
 
         if (state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
@@ -110,6 +125,44 @@ public class Arena {
         }
 
     }
+
+    //KIT MANAGEMENT
+
+    public void setKit(UUID uuid, KitType type) {
+        removeKit(uuid);
+        try {
+            //eu mitei muito nessa reflection pqpppp
+            kits.put(uuid, type.getKitClass().getConstructor(TkSpigot.class, KitType.class, UUID.class).newInstance(tkSpigot, type, uuid));
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public KitType getKitType(Player player)
+    {
+        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()).getType() : null;
+
+    }
+
+    //TEAM MANAGEMENT
+
+    public int getTeamCount(Team team)
+    {
+        int amount = 0;
+        for(Team t : teams.values())
+        {
+            if(t==team) amount++;
+        }
+        return amount;
+    }
+
+    public Team getTeam(Player player)
+    {
+        return teams.get(player.getUniqueId());
+    }
+
 
 
     //INFO
@@ -151,23 +204,17 @@ public class Arena {
 
     }
 
-    public void setKit(UUID uuid, KitType type) {
-        removeKit(uuid);
-        try {
-            //eu mitei muito nessa reflection pqpppp
-            kits.put(uuid, type.getKitClass().getConstructor(TkSpigot.class, KitType.class, UUID.class).newInstance(tkSpigot, type, uuid));
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public KitType getKitType(Player player)
+    public void setTeam(Player player, Team team)
     {
-        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()).getType() : null;
-
+        removeTeam(player);
+        teams.put(player.getUniqueId(), team);
     }
+
+    public void removeTeam(Player player)
+    {
+     if(teams.containsKey(player.getUniqueId())) teams.remove(player.getUniqueId());
+    }
+
 
 
 }

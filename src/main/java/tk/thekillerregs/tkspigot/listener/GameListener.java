@@ -10,6 +10,7 @@ import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
 import tk.thekillerregs.tkspigot.kit.KitType;
+import tk.thekillerregs.tkspigot.team.Team;
 
 public class GameListener implements Listener {
 
@@ -34,6 +35,8 @@ public class GameListener implements Listener {
     public void onClick(InventoryClickEvent e)
     {
         Player player = (Player) e.getWhoClicked();
+
+        //Kit GUI Listener
         if(e.getView().getTitle().contains("Selecione seu kit") && e.getInventory()!=null && e.getCurrentItem()!=null)
         {
             e.setCancelled(true);
@@ -57,7 +60,27 @@ public class GameListener implements Listener {
             }
             player.closeInventory();
         }
+        else if(e.getView().getTitle().contains("Selecione seu time") && e.getInventory()!=null && e.getCurrentItem()!=null)
+        {
+            e.setCancelled(true);
+            if(e.getCurrentItem().getType()==Material.LIME_STAINED_GLASS_PANE) return;
+            Team team = Team.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+            Arena arena = tkSpigot.getArenaManager().getArena(player);
+            if(arena!=null)
+            {
+                Team current = arena.getTeam(player);
+                if(current!=null && current == team)
+                {
+                    player.sendMessage("§cVocê já selecionou esse time!");
+                }
+                else{
+                    player.sendMessage("§aVocê escolheu o time " + team.getDisplay());
+                    arena.setTeam(player, team);
+                }
 
+            }
+            player.closeInventory();
+        }
 
     }
 

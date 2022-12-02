@@ -12,6 +12,7 @@ import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
 import tk.thekillerregs.tkspigot.kit.KitUI;
+import tk.thekillerregs.tkspigot.team.TeamUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,20 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
 
                 }
                 else{ p.sendMessage("§cVocê precisa estar em uma arena para selecionar um kit!"); return false;}
+            }
+            else if (args.length==1 && args[0].equalsIgnoreCase("team"))
+            {
+                Arena arena = tkSpigot.getArenaManager().getArena(p);
+                if(arena!=null)
+                {
+                    if(arena.getState()!= GameState.LIVE)
+                    {
+                        new TeamUI(arena, p);
+
+                    } else p.sendMessage("§cVocê não pode selecionar um time depois de a partida ter começado!");
+                }
+                else p.sendMessage("§cVocê não está em nenhuma arena!");
+
             }
 
             else if(args.length==1 && args[0].equalsIgnoreCase("leave"))
@@ -105,6 +120,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage("§c/arena <list/leave>");
                 p.sendMessage("§c/arena join <id>");
                 p.sendMessage("§c/arena kit");
+                p.sendMessage("§c/arena team");
             }
 
         }
@@ -116,7 +132,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(args.length==1)
         {
-            return StringUtil.copyPartialMatches(args[0], Arrays.asList("join", "leave", "list","kit"), new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[0], Arrays.asList("join", "leave", "list","kit","team"), new ArrayList<>());
         }
         if(args.length==2 && args[0].equals("join"))
         {
