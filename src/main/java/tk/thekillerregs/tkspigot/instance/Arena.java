@@ -9,7 +9,6 @@ import tk.thekillerregs.tkspigot.kit.KitType;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
 import tk.thekillerregs.tkspigot.TkSpigot;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ public class Arena {
     private int id;
     private Location spawn;
     private Countdown countdown;
-
 
 
     private List<UUID> players;
@@ -44,19 +42,18 @@ public class Arena {
 
     //GAME
 
-    public void start()
-    {
+    public void start() {
         game.start();
     }
 
-    public void reset(boolean kickPlayers)
-    {
-        if(kickPlayers)
-        {
+    public void reset(boolean kickPlayers) {
+        if (kickPlayers) {
             Location spawn = ConfigManager.getLobbySpawn();
-            players.forEach(u -> {Player pu = Bukkit.getPlayer(u);
-                                    pu.teleport(spawn);
-                                    removeKit(pu.getUniqueId());});
+            players.forEach(u -> {
+                Player pu = Bukkit.getPlayer(u);
+                pu.teleport(spawn);
+                removeKit(pu.getUniqueId());
+            });
             players.clear();
         }
 
@@ -70,53 +67,46 @@ public class Arena {
 
     //TOOLS
 
-    public void sendMessage(String message)
-    {
+    public void sendMessage(String message) {
         players.forEach(id -> Bukkit.getPlayer(id).sendMessage(message));
     }
 
-    public void sendTitle(String title, String subTitle)
-    {
+    public void sendTitle(String title, String subTitle) {
         players.forEach(id -> Bukkit.getPlayer(id).sendTitle(title, subTitle));
     }
 
-    public void sendTitle(String title, String subTitle, int in, int stay, int out)
-    {
+    public void sendTitle(String title, String subTitle, int in, int stay, int out) {
         players.forEach(id -> Bukkit.getPlayer(id).sendTitle(title, subTitle, in, stay, out));
     }
 
     //PLAYERS
 
-    public void addPlayer(Player player)
-    {
-    players.add(player.getUniqueId());
-    player.teleport(spawn);
+    public void addPlayer(Player player) {
+        players.add(player.getUniqueId());
+        player.teleport(spawn);
 
-    if(state.equals(GameState.RECRUITING) && players.size()>=ConfigManager.getRequiredPlayers())
-    {
-        countdown.start();
+        player.sendMessage("§eEscolha seu kit com o comando §6/arena kit§e.");
+
+        if (state.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
+            countdown.start();
+        }
+
     }
 
-    }
-
-    public void removePlayer(Player player)
-    {
+    public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
         player.teleport(ConfigManager.getLobbySpawn());
         player.sendTitle("", "");
 
         removeKit(player.getUniqueId());
 
-        if(state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers())
-        {
-        sendMessage("§cA contagem foi parada pois não há jogadores suficientes!");
-        reset(false);
-        return;
-        }
-        else if(state== GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers())
-        {
-         sendMessage("§cA partida foi encerrada devido à baixa quantia de players!");
-         reset(false);
+        if (state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
+            sendMessage("§cA contagem foi parada pois não há jogadores suficientes!");
+            reset(false);
+            return;
+        } else if (state == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()) {
+            sendMessage("§cA partida foi encerrada devido à baixa quantia de players!");
+            reset(false);
         }
 
     }
@@ -145,32 +135,39 @@ public class Arena {
         this.state = state;
     }
 
-    public Game getGame() {return game;}
+    public Game getGame() {
+        return game;
+    }
 
     public HashMap<UUID, Kit> getKits() {
         return kits;
     }
 
-    public void removeKit(UUID uuid)
-    {
-    if(kits.containsKey(uuid))
-    {
-        kits.get(uuid).remove();
-        kits.remove(uuid);
-    }
+    public void removeKit(UUID uuid) {
+        if (kits.containsKey(uuid)) {
+            kits.get(uuid).remove();
+            kits.remove(uuid);
+        }
 
     }
 
-    public void setKit(UUID uuid, KitType type)
-    {
+    public void setKit(UUID uuid, KitType type) {
         removeKit(uuid);
         try {
             //eu mitei muito nessa reflection pqpppp
             kits.put(uuid, type.getKitClass().getConstructor(TkSpigot.class, KitType.class, UUID.class).newInstance(tkSpigot, type, uuid));
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
 
     }
+
+    public KitType getKitType(Player player)
+    {
+        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()).getType() : null;
+
+    }
+
 
 }

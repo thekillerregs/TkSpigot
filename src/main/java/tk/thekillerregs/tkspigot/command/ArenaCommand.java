@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
+import tk.thekillerregs.tkspigot.kit.KitUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,22 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                 tkSpigot.getArenaManager().getArenas().forEach(a-> p.sendMessage("§a- " + a.getId()+ " §e("+a.getState().name()+")"));
 
             }
+            else if (args.length==1 && args[0].equalsIgnoreCase("kit"))
+            {
+                Arena arena = tkSpigot.getArenaManager().getArena(p);
+                if(arena!=null)
+                {
+                    if(arena.getState()!=GameState.LIVE)
+                    {
+                    new KitUI(p);
+
+                    }
+                    else{p.sendMessage("§cA partida já começou! Você não pode selecionar um kit."); return false;}
+
+                }
+                else{ p.sendMessage("§cVocê precisa estar em uma arena para selecionar um kit!"); return false;}
+            }
+
             else if(args.length==1 && args[0].equalsIgnoreCase("leave"))
             {
                 Arena arena = tkSpigot.getArenaManager().getArena(p);
@@ -87,6 +104,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage("§cUso inválido! Sintaxe:");
                 p.sendMessage("§c/arena <list/leave>");
                 p.sendMessage("§c/arena join <id>");
+                p.sendMessage("§c/arena kit");
             }
 
         }
@@ -98,7 +116,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(args.length==1)
         {
-            return StringUtil.copyPartialMatches(args[0], Arrays.asList("join", "leave", "list"), new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[0], Arrays.asList("join", "leave", "list","kit"), new ArrayList<>());
         }
         if(args.length==2 && args[0].equals("join"))
         {
