@@ -35,7 +35,7 @@ public class Game {
         if(playerPoints==20)
         {
         arena.sendMessage("§6"+p.getDisplayName()+ "§6 ganhou a partida!");
-        arena.reset(true);
+        arena.reset();
         }
         else {
             p.sendMessage("§a+1 ponto!");

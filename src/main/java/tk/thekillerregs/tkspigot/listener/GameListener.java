@@ -1,11 +1,14 @@
 package tk.thekillerregs.tkspigot.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
@@ -82,6 +85,15 @@ public class GameListener implements Listener {
             player.closeInventory();
         }
 
+    }
+
+    public void onWorldLoad(WorldLoadEvent e)
+    {
+        Arena arena = tkSpigot.getArenaManager().getArena(e.getWorld());
+        if(arena!=null)
+        {
+        arena.toggleCanJoin();
+        }
     }
 
 

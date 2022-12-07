@@ -1,8 +1,7 @@
 package tk.thekillerregs.tkspigot.instance;
 
 import com.google.common.collect.TreeMultimap;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.kit.Kit;
@@ -24,7 +23,7 @@ public class Arena {
     private int id;
     private Location spawn;
     private Countdown countdown;
-
+    private boolean canJoin;
 
     private List<UUID> players;
     private HashMap<UUID, Kit> kits;
@@ -42,6 +41,7 @@ public class Arena {
         this.players = new ArrayList<UUID>();
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
+        this.canJoin=true;
     }
 
     //GAME
@@ -50,8 +50,11 @@ public class Arena {
         game.start();
     }
 
-    public void reset(boolean kickPlayers) {
-        if (kickPlayers) {
+    public void reset() {
+
+        if(state==GameState.LIVE)
+        {
+            this.canJoin=false;
             Location spawn = ConfigManager.getLobbySpawn();
             players.forEach(u -> {
                 Player pu = Bukkit.getPlayer(u);
@@ -60,9 +63,16 @@ public class Arena {
             });
             players.clear();
             teams.clear();
+            kits.clear();
+
+
+                String worldName = this.spawn.getWorld().getName();
+                Bukkit.unloadWorld(this.spawn.getWorld(), false);
+                World world = Bukkit.createWorld(new WorldCreator(worldName));
+                world.setAutoSave(false);
+
         }
 
-        kits.clear();
 
         sendTitle("", "");
         state = GameState.RECRUITING;
@@ -117,11 +127,11 @@ public class Arena {
 
         if (state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage("§cA contagem foi parada pois não há jogadores suficientes!");
-            reset(false);
+            reset();
             return;
         } else if (state == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage("§cA partida foi encerrada devido à baixa quantia de players!");
-            reset(false);
+            reset();
         }
 
     }
@@ -146,6 +156,14 @@ public class Arena {
 
     }
 
+    public void removeKit(UUID uuid) {
+        if (kits.containsKey(uuid)) {
+            kits.get(uuid).remove();
+            kits.remove(uuid);
+        }
+
+    }
+
     //TEAM MANAGEMENT
 
     public int getTeamCount(Team team)
@@ -163,6 +181,16 @@ public class Arena {
         return teams.get(player.getUniqueId());
     }
 
+    public void setTeam(Player player, Team team)
+    {
+        removeTeam(player);
+        teams.put(player.getUniqueId(), team);
+    }
+
+    public void removeTeam(Player player)
+    {
+        if(teams.containsKey(player.getUniqueId())) teams.remove(player.getUniqueId());
+    }
 
 
     //INFO
@@ -195,26 +223,11 @@ public class Arena {
     public HashMap<UUID, Kit> getKits() {
         return kits;
     }
+    public World getWorld(){return spawn.getWorld();}
 
-    public void removeKit(UUID uuid) {
-        if (kits.containsKey(uuid)) {
-            kits.get(uuid).remove();
-            kits.remove(uuid);
-        }
+    public void toggleCanJoin()
+    {this.canJoin = !this.canJoin;}
 
-    }
-
-    public void setTeam(Player player, Team team)
-    {
-        removeTeam(player);
-        teams.put(player.getUniqueId(), team);
-    }
-
-    public void removeTeam(Player player)
-    {
-     if(teams.containsKey(player.getUniqueId())) teams.remove(player.getUniqueId());
-    }
-
-
+    public boolean canJoin(){return this.canJoin;}
 
 }

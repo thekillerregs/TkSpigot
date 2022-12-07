@@ -99,8 +99,15 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                     Arena arena = tkSpigot.getArenaManager().getArena(id);
                     if(arena.getState()== GameState.RECRUITING || arena.getState().equals(GameState.COUNTDOWN))
                     {
-                        p.sendMessage("§aVocê agora está jogando na arena "+id+".");
-                        arena.addPlayer(p);
+                        if(arena.canJoin()){
+                            p.sendMessage("§aVocê agora está jogando na arena "+id+".");
+                            arena.addPlayer(p);
+                        }
+                        else {
+                            p.sendMessage("§cVocê ainda não pode ingressar nessa arena!");
+                            return false;
+                        }
+
                     }
                     else{
                     p.sendMessage("§cVocê não pode ingressar nessa arena!");
