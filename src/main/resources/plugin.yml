@@ -2,7 +2,7 @@ name: TkSpigot
 version: '${project.version}'
 main: tk.thekillerregs.tkspigot.TkSpigot
 authors: [ thekillerregs ]
-api-version: '1.19'
+api-version: 1.17
 commands:
   arena:
 

@@ -55,21 +55,30 @@ public class Arena {
         if(state==GameState.LIVE)
         {
             this.canJoin=false;
-            Location spawn = ConfigManager.getLobbySpawn();
+            Location lobbyspawn = ConfigManager.getLobbySpawn();
             players.forEach(u -> {
                 Player pu = Bukkit.getPlayer(u);
-                pu.teleport(spawn);
-                removeKit(pu.getUniqueId());
+                if(pu!=null) {
+                    pu.teleport(lobbyspawn);
+                    removeKit(pu.getUniqueId());
+                }
             });
             players.clear();
             teams.clear();
             kits.clear();
 
 
-                String worldName = this.spawn.getWorld().getName();
-                Bukkit.unloadWorld(this.spawn.getWorld(), false);
-                World world = Bukkit.createWorld(new WorldCreator(worldName));
+            //Creates a task to wait 5 seconds so the whole thing doesn't bug
+                String worldName = spawn.getWorld().getName();
+                Bukkit.unloadWorld(spawn.getWorld(), false);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(tkSpigot, () -> {
+                World world = Bukkit.getServer().createWorld(new WorldCreator(worldName));
                 world.setAutoSave(false);
+               this.spawn.setWorld(world);
+            }, 5l);
+
+
+
 
         }
 

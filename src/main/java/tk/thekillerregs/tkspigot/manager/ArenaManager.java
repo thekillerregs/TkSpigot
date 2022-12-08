@@ -22,7 +22,7 @@ public class ArenaManager {
         for(String str : config.getConfigurationSection("arenas.").getKeys(false))
         {
            World world = Bukkit.createWorld(new WorldCreator(config.getString("arenas."+str+".world")));
-            world.setAutoSave(false);
+           world.setAutoSave(false);
 
 
 

@@ -1,26 +1,26 @@
-required-players: 2
-countdown-seconds: 30
+required-players: 1
+countdown-seconds: 10
 lobby-spawn:
-    world: 'world'
-    x: -178.5
-    y: 109.5
-    z: -233.5
-    yaw: 0
-    pitch: 0
+  world: 'world'
+  x: -169.5
+  y: 80.5
+  z: -274.5
+  yaw: 0
+  pitch: 0
 
 arenas:
   0:
-    world: 'world'
-    x: -179.5
-    y: 109.5
-    z: -211.5
+    world: 'first'
+    x: 0.5
+    y: 4.5
+    z: 0.5
     yaw: 180
     pitch: 0
 
   1:
-    world: 'world'
-    x: -152.5
-    y: 110.5
-    z: -207.5
-    yaw: 140
+    world: 'second'
+    x: 0.5
+    y: 4.5
+    z: 0.5
+    yaw: 180
     pitch: 0

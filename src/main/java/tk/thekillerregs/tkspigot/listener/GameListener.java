@@ -2,6 +2,7 @@ package tk.thekillerregs.tkspigot.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -87,13 +88,19 @@ public class GameListener implements Listener {
 
     }
 
+    @EventHandler
     public void onWorldLoad(WorldLoadEvent e)
     {
-        Arena arena = tkSpigot.getArenaManager().getArena(e.getWorld());
-        if(arena!=null)
-        {
-        arena.toggleCanJoin();
-        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(tkSpigot, () -> {
+            Arena arena = tkSpigot.getArenaManager().getArena(e.getWorld());
+            if(arena!=null)
+            {
+                arena.toggleCanJoin();
+            }
+
+        }, 10l);
+
+
     }
 
 
