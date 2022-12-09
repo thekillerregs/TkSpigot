@@ -11,6 +11,7 @@ import tk.thekillerregs.tkspigot.listener.ConnectListener;
 import tk.thekillerregs.tkspigot.listener.GameListener;
 import tk.thekillerregs.tkspigot.manager.ArenaManager;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
+import tk.thekillerregs.tkspigot.manager.LangManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ private ArenaManager arenaManager;
     @Override
     public void onEnable(){
         ConfigManager.setupConfig(this);
+        LangManager.setupLangFile(this);
         arenaManager = new ArenaManager(this);
 
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);

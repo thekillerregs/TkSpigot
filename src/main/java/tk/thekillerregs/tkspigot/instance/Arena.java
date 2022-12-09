@@ -2,6 +2,7 @@ package tk.thekillerregs.tkspigot.instance;
 
 import com.google.common.collect.TreeMultimap;
 import org.bukkit.*;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.kit.Kit;
@@ -22,6 +23,7 @@ public class Arena {
 
     private int id;
     private Location spawn;
+    private Location sign;
     private Countdown countdown;
     private boolean canJoin;
 
@@ -31,10 +33,9 @@ public class Arena {
     private GameState state;
     private Game game;
 
-    public Arena(TkSpigot tkSpigot, int id, Location spawn) {
+    public Arena(TkSpigot tkSpigot, int id, Location spawn, Location sign) {
         this.id = id;
         this.spawn = spawn;
-        this.state = GameState.RECRUITING;
         this.countdown = new Countdown(tkSpigot, this);
         this.game = new Game(this);
         this.tkSpigot = tkSpigot;
@@ -42,6 +43,9 @@ public class Arena {
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
         this.canJoin=true;
+        this.sign=sign;
+        setState(GameState.RECRUITING);
+
     }
 
     //GAME
@@ -71,7 +75,7 @@ public class Arena {
             //Creates a task to wait 5 seconds so the whole thing doesn't bug
                 String worldName = spawn.getWorld().getName();
                 Bukkit.unloadWorld(spawn.getWorld(), false);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(tkSpigot, () -> {
+               Bukkit.getScheduler().scheduleSyncDelayedTask(tkSpigot, () -> {
                 World world = Bukkit.getServer().createWorld(new WorldCreator(worldName));
                 world.setAutoSave(false);
                this.spawn.setWorld(world);
@@ -82,9 +86,8 @@ public class Arena {
 
         }
 
-
+        setState(GameState.RECRUITING);
         sendTitle("", "");
-        state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(tkSpigot, this);
     }
@@ -102,6 +105,19 @@ public class Arena {
     public void sendTitle(String title, String subTitle, int in, int stay, int out) {
         players.forEach(id -> Bukkit.getPlayer(id).sendTitle(title, subTitle, in, stay, out));
     }
+
+    public void updateSign(String line1, String line2, String line3, String line4)
+    {
+
+            Sign signBlock = (Sign) sign.getBlock().getState();
+            signBlock.setLine(0, line1);
+            signBlock.setLine(1, line2);
+            signBlock.setLine(2, line3);
+            signBlock.setLine(3, line4);
+            signBlock.update();
+
+    }
+
 
     //PLAYERS
 
@@ -141,8 +157,11 @@ public class Arena {
         } else if (state == GameState.LIVE && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage("§cA partida foi encerrada devido à baixa quantia de players!");
             reset();
+            return;
         }
-
+        if(state == GameState.LIVE) {
+            updateSign("Arena " + id, state.name(), "", "Players: " + players.size());
+        }
     }
 
     //KIT MANAGEMENT
@@ -223,6 +242,7 @@ public class Arena {
 
     public void setState(GameState state) {
         this.state = state;
+        updateSign("Arena " + id, state.name(), "", state==GameState.LIVE ? "Players: " +players.size() : "");
     }
 
     public Game getGame() {
@@ -239,4 +259,5 @@ public class Arena {
 
     public boolean canJoin(){return this.canJoin;}
 
+    public Location getSign() {return sign;}
 }

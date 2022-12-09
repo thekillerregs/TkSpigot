@@ -8,8 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
@@ -99,6 +101,22 @@ public class GameListener implements Listener {
             }
 
         }, 10l);
+
+
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e)
+    {
+        if(e.getHand().equals(EquipmentSlot.HAND) && e.hasBlock() && e.getClickedBlock().getType().equals(Material.OAK_SIGN))
+        {
+        Arena arena = tkSpigot.getArenaManager().getArena(e.getClickedBlock().getLocation());
+        if(arena!=null)
+        {
+            Bukkit.dispatchCommand(e.getPlayer(), "arena join " +arena.getId());
+        }
+
+        }
 
 
     }

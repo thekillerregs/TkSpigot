@@ -10,17 +10,29 @@ lobby-spawn:
 
 arenas:
   0:
-    world: 'first'
-    x: 0.5
-    y: 4.5
-    z: 0.5
-    yaw: 180
-    pitch: 0
+    sign:
+      world: 'world'
+      x: -163
+      y: 67
+      z: -256
+    player-spawn:
+       world: 'first'
+       x: 0.5
+       y: 4.5
+       z: 0.5
+       yaw: 180
+       pitch: 0
 
   1:
-    world: 'second'
-    x: 0.5
-    y: 4.5
-    z: 0.5
-    yaw: 180
-    pitch: 0
+    sign:
+      world: 'world'
+      x: -165
+      y: 67
+      z: -255
+    player-spawn:
+      world: 'second'
+      x: 0.5
+      y: 4.5
+      z: 0.5
+      yaw: 180
+      pitch: 0

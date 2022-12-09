@@ -1,5 +1,6 @@
 package tk.thekillerregs.tkspigot.command;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import tk.thekillerregs.tkspigot.GameState;
 import tk.thekillerregs.tkspigot.TkSpigot;
 import tk.thekillerregs.tkspigot.instance.Arena;
 import tk.thekillerregs.tkspigot.kit.KitUI;
+import tk.thekillerregs.tkspigot.manager.LangManager;
 import tk.thekillerregs.tkspigot.team.TeamUI;
 
 import java.util.ArrayList;
@@ -73,8 +75,7 @@ public class ArenaCommand implements CommandExecutor, TabCompleter {
                 Arena arena = tkSpigot.getArenaManager().getArena(p);
                 if(arena!=null)
                 {
-
-                    p.sendMessage("§aVocê saiu da arena!");
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', LangManager.getLeaveArena()));
                     arena.removePlayer(p);
                 }
                 else p.sendMessage("§cVocê não está em nenhuma arena!");
