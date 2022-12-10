@@ -21,6 +21,9 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 private ArenaManager arenaManager;
 
+
+
+
     @Override
     public void onEnable(){
         ConfigManager.setupConfig(this);

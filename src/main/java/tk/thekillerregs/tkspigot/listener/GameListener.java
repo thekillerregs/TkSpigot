@@ -26,16 +26,7 @@ public class GameListener implements Listener {
         this.tkSpigot = tkSpigot;
     }
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent e)
-    {
-        Arena arena = tkSpigot.getArenaManager().getArena(e.getPlayer());
-        if(arena!=null && arena.getState().equals(GameState.LIVE))
-        {
-          arena.getGame().addPoint(e.getPlayer());
-        }
 
-    }
 
     @EventHandler
     public void onClick(InventoryClickEvent e)

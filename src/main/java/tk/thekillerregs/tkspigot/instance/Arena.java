@@ -2,9 +2,13 @@ package tk.thekillerregs.tkspigot.instance;
 
 import com.google.common.collect.TreeMultimap;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import tk.thekillerregs.tkspigot.GameState;
+import tk.thekillerregs.tkspigot.instance.game.BlockGame;
+import tk.thekillerregs.tkspigot.instance.game.DropGame;
+import tk.thekillerregs.tkspigot.instance.game.Game;
 import tk.thekillerregs.tkspigot.kit.Kit;
 import tk.thekillerregs.tkspigot.kit.KitType;
 import tk.thekillerregs.tkspigot.manager.ConfigManager;
@@ -33,18 +37,28 @@ public class Arena {
     private GameState state;
     private Game game;
 
-    public Arena(TkSpigot tkSpigot, int id, Location spawn, Location sign) {
+    private String gameString;
+
+    public Arena(TkSpigot tkSpigot, int id, Location spawn, Location sign, String game) {
         this.id = id;
         this.spawn = spawn;
         this.countdown = new Countdown(tkSpigot, this);
-        this.game = new Game(this);
         this.tkSpigot = tkSpigot;
         this.players = new ArrayList<UUID>();
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
         this.canJoin=true;
         this.sign=sign;
+
+        if(game.equals("BLOCK"))
+                this.game= new BlockGame(tkSpigot, this);
+        else if (game.equals("DROP"))
+                this.game = new DropGame(tkSpigot, this);
+
+        this.gameString=game;
+
         setState(GameState.RECRUITING);
+
 
     }
 
@@ -90,6 +104,14 @@ public class Arena {
         sendTitle("", "");
         countdown.cancel();
         countdown = new Countdown(tkSpigot, this);
+        game.unregister();
+
+        if(gameString.equals("BLOCK"))
+            this.game= new BlockGame(tkSpigot, this);
+        else if (gameString.equals("DROP"))
+            this.game = new DropGame(tkSpigot, this);
+
+
     }
 
     //TOOLS
@@ -260,4 +282,9 @@ public class Arena {
     public boolean canJoin(){return this.canJoin;}
 
     public Location getSign() {return sign;}
+
+
+    public String getGameString() {
+        return gameString;
+    }
 }

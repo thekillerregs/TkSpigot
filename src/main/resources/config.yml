@@ -10,6 +10,7 @@ lobby-spawn:
 
 arenas:
   0:
+    game: 'BLOCK'
     sign:
       world: 'world'
       x: -163
@@ -24,6 +25,7 @@ arenas:
        pitch: 0
 
   1:
+    game: 'DROP'
     sign:
       world: 'world'
       x: -165

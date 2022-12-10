@@ -39,7 +39,7 @@ public class ArenaManager {
                 new Location(Bukkit.getWorld(config.getString("arenas."+str+".sign.world")),
                         config.getDouble("arenas."+str+".sign.x"),
                         config.getDouble("arenas."+str+".sign.y"),
-                        config.getDouble("arenas."+str+".sign.z"))));
+                        config.getDouble("arenas."+str+".sign.z")), config.getString("arenas."+str+".game") ));
         }
 
     }
