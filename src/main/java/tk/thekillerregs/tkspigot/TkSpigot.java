@@ -1,40 +1,28 @@
 package tk.thekillerregs.tkspigot;
 
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import tk.thekillerregs.tkspigot.command.ArenaCommand;
-import tk.thekillerregs.tkspigot.kit.Kit;
-import tk.thekillerregs.tkspigot.kit.KitType;
-import tk.thekillerregs.tkspigot.listener.ConnectListener;
-import tk.thekillerregs.tkspigot.listener.GameListener;
-import tk.thekillerregs.tkspigot.manager.ArenaManager;
-import tk.thekillerregs.tkspigot.manager.ConfigManager;
-import tk.thekillerregs.tkspigot.manager.LangManager;
+import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.UUID;
 
-public final class TkSpigot extends JavaPlugin implements Listener {
-
-private ArenaManager arenaManager;
-
+public final class TkSpigot extends JavaPlugin implements PluginMessageListener {
 
 
 
     @Override
     public void onEnable(){
-        ConfigManager.setupConfig(this);
-        LangManager.setupLangFile(this);
-        arenaManager = new ArenaManager(this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
 
-        Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
-
-        getCommand("arena").setExecutor(new ArenaCommand(this));
-        getCommand("arena").setTabCompleter(new ArenaCommand(this));
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("PlayerCount");
+        out.writeUTF("Server2");
 
 
     }
@@ -45,13 +33,22 @@ private ArenaManager arenaManager;
         // Plugin shutdown logic
     }
 
-    public ArenaManager getArenaManager() {
-        return arenaManager;
+
+    @Override
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] data) {
+            if(!channel.equals("BungeeCord")) return;
+
+        ByteArrayDataInput in = ByteStreams.newDataInput(data);
+        String subChannel = in.readUTF();
+        if(subChannel.equals("PlayerCount"))
+        {
+            String server = in.readUTF();
+            int players = in.readInt();
+        }
+
+
+
     }
-
-
-
-
 }
 
 
