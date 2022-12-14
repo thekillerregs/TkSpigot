@@ -1,21 +1,26 @@
 package tk.thekillerregs.tkspigot;
 
 
-import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
+import tk.thekillerregs.tkspigot.instance.Cosmetic;
+import tk.thekillerregs.tkspigot.navigation.CosmeticListener;
+import tk.thekillerregs.tkspigot.navigation.CosmeticsCommand;
 
-
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 
 public final class TkSpigot extends JavaPlugin {
 
+    private HashMap<UUID, List<Cosmetic>> activeCosmetics = new HashMap<>();
+
 
     @Override
-    public void onEnable(){
-        getCommand("npc").setExecutor(new NPCCommand(this));
+    public void onEnable() {
+        getCommand("cosmetics").setExecutor(new CosmeticsCommand(this));
+        getServer().getPluginManager().registerEvents(new CosmeticListener(this), this);
+
     }
 
 
@@ -25,7 +30,9 @@ public final class TkSpigot extends JavaPlugin {
     }
 
 
-
+    public HashMap<UUID, List<Cosmetic>> getActiveCosmetics() {
+        return activeCosmetics;
+    }
 }
 
 
