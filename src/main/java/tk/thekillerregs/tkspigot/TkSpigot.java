@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.thekillerregs.tkspigot.instance.Cosmetic;
 import tk.thekillerregs.tkspigot.navigation.CosmeticListener;
 import tk.thekillerregs.tkspigot.navigation.CosmeticsCommand;
+import tk.thekillerregs.tkspigot.navigation.HatsCommand;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ public final class TkSpigot extends JavaPlugin {
     @Override
     public void onEnable() {
         getCommand("cosmetics").setExecutor(new CosmeticsCommand(this));
+        getCommand("hats").setExecutor(new HatsCommand(this));
         getServer().getPluginManager().registerEvents(new CosmeticListener(this), this);
 
     }
