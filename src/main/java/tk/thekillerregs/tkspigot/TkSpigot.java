@@ -15,9 +15,7 @@ public final class TkSpigot extends JavaPlugin {
 
     @Override
     public void onEnable(){
-            //Intentional error
-            ServerPlayer sp = ((CraftPlayer) Bukkit.getPlayer("thekillerregs")).getHandle();
-
+        getCommand("npc").setExecutor(new NPCCommand(this));
     }
 
 
