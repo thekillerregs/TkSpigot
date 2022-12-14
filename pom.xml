@@ -61,8 +61,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-
-
+            <repository>
+                <id>enginehub-repo</id>
+                <url>https://maven.enginehub.org/repo/</url>
+            </repository>
     </repositories>
 
     <dependencies>
@@ -77,6 +79,13 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-alpha.22</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.enginehub</groupId>
+            <artifactId>squirrelid</artifactId>
+            <version>0.3.0</version>
+            <scope>compile</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

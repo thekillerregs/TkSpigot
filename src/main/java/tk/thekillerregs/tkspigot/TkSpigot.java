@@ -5,24 +5,33 @@ package tk.thekillerregs.tkspigot;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.enginehub.squirrelid.Profile;
+import org.enginehub.squirrelid.resolver.HttpRepositoryService;
+import org.enginehub.squirrelid.resolver.ProfileService;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 
-public final class TkSpigot extends JavaPlugin implements PluginMessageListener {
 
+public final class TkSpigot extends JavaPlugin {
 
 
     @Override
     public void onEnable(){
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
+        ProfileService resolver = HttpRepositoryService.forMinecraft();
+        //:trolljogos:
+        try {
+            Profile profile = resolver.findByName("thekillerregs");
+            if(profile!=null) System.out.println(profile.getUniqueId());
+            else System.out.println("§cProfile is null");
 
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("PlayerCount");
-        out.writeUTF("Server2");
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }
@@ -34,21 +43,7 @@ public final class TkSpigot extends JavaPlugin implements PluginMessageListener 
     }
 
 
-    @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] data) {
-            if(!channel.equals("BungeeCord")) return;
 
-        ByteArrayDataInput in = ByteStreams.newDataInput(data);
-        String subChannel = in.readUTF();
-        if(subChannel.equals("PlayerCount"))
-        {
-            String server = in.readUTF();
-            int players = in.readInt();
-        }
-
-
-
-    }
 }
 
 
