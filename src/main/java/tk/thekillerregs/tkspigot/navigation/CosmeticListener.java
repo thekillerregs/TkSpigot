@@ -10,6 +10,9 @@ import tk.thekillerregs.tkspigot.instance.Cosmetic;
 import tk.thekillerregs.tkspigot.instance.hats.Hat;
 import tk.thekillerregs.tkspigot.instance.hats.HatType;
 import tk.thekillerregs.tkspigot.instance.hats.HatsUI;
+import tk.thekillerregs.tkspigot.instance.trails.Trail;
+import tk.thekillerregs.tkspigot.instance.trails.TrailType;
+import tk.thekillerregs.tkspigot.instance.trails.TrailsUI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,11 +40,16 @@ public class CosmeticListener implements Listener {
                         new HatsUI(tkSpigot, player);
                         e.setCancelled(true);
                         break;
+                    case "trails":
+                        new TrailsUI(tkSpigot, player);
+                        e.setCancelled(true);
+                        break;
 
                     default:
                         e.setCancelled(true);
                 }
             }
+
             //Hats UI
             if (e.getView().getTitle().contains("Hats")) {
                 HatType type = HatType.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
@@ -55,24 +63,55 @@ public class CosmeticListener implements Listener {
                             cosmetic.disable();
                             itr.remove();
                             if (((Hat) cosmetic).getHatType() == type) {
-                                player.sendMessage("§cVocê desabilitou o chapéu " + type.getDisplay() + "!");
+                                player.sendMessage("§cVocê desabilitou o chapéu " + type.getDisplay() + "§c!");
                                 player.closeInventory();
                                 return;
                             }
                         }
                     }
-                } else {
-                    active = new ArrayList<>();
-                }
+                } else active = new ArrayList<>();
+
 
                 Hat hat = new Hat(tkSpigot, player, type);
                 hat.enable();
                 active.add(hat);
                 tkSpigot.getActiveCosmetics().put(player.getUniqueId(), active);
-                player.sendMessage("§aVocê equipou o chapéu " + type.getDisplay()+"!");
+                player.sendMessage("§aVocê equipou o chapéu " + type.getDisplay() + "§a!");
                 player.closeInventory();
             }
 
+            //Trails UI
+            if (e.getView().getTitle().contains("Trails")) {
+                TrailType type = TrailType.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
+                List<Cosmetic> active;
+                if (tkSpigot.getActiveCosmetics().containsKey(player.getUniqueId())) {
+                    active = tkSpigot.getActiveCosmetics().get(player.getUniqueId());
+                    Iterator<Cosmetic> itr = active.listIterator();
+                    while(itr.hasNext())
+                    {
+                        Cosmetic cosmetic = itr.next();
+                        if(cosmetic instanceof Trail)
+                        {
+                            cosmetic.disable();
+                            itr.remove();
+                            if(((Trail) cosmetic).getTrailType()==type)
+                            {
+                                player.sendMessage("§cVocê desabilitou a trail " + type.getDisplay()+"§c!");
+                                player.closeInventory();
+                                return;
+                            }
+                        }
+
+                    }
+                } else active = new ArrayList<>();
+
+                Trail trail = new Trail(tkSpigot, player, type);
+                trail.enable();
+                active.add(trail);
+                tkSpigot.getActiveCosmetics().put(player.getUniqueId(), active);
+                player.sendMessage("§aVocê equipou a trail " + type.getDisplay() + "§a!");
+                player.closeInventory();
+            }
 
         }
 

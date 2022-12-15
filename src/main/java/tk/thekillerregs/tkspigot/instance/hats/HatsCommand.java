@@ -1,4 +1,4 @@
-package tk.thekillerregs.tkspigot.navigation;
+package tk.thekillerregs.tkspigot.instance.hats;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
