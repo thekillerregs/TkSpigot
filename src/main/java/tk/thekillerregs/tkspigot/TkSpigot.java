@@ -11,13 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.util.Vector;
+
 
 
 public final class TkSpigot extends JavaPlugin implements Listener {
@@ -136,14 +132,11 @@ public final class TkSpigot extends JavaPlugin implements Listener {
             double targetHeight = 0.0;
             int current = 0;
             int max = 50;
-            int ticksPerParticle = 0;
-            int ticks = 0;
-
+           
 
             @Override
             public void run() {
-                ticks++;
-                if(ticks==ticksPerParticle) {
+
                     Vector vecOffset = null;
                     double accuracy = 0.5;
                     if (target != null) {
@@ -240,7 +233,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
 
 
                 }
-            }
+
         }.runTaskTimer(this, 0, 1);
 
 
