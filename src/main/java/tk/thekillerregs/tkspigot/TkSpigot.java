@@ -132,7 +132,7 @@ public final class TkSpigot extends JavaPlugin implements Listener {
             double targetHeight = 0.0;
             int current = 0;
             int max = 50;
-           
+
 
             @Override
             public void run() {
@@ -144,15 +144,12 @@ public final class TkSpigot extends JavaPlugin implements Listener {
                         Location targetLoc = target.getLocation().clone().add(0, targetHeight / 2, 0);
                         double distance = particle.distance(targetLoc);
                         if (distance < 5) {
-                            ticksPerParticle = 2;
-                            ticks = 0;
                             //the closer the distance, the tighter the curve
                             accuracy = accuracy * Math.pow(0.6, distance) + 0.5;
 
                         }
                         if (distance < 3) {
-                            ticksPerParticle = 1;
-                            ticks = 0;
+
                         }
 
                         Vector partDir = particle.getDirection();
